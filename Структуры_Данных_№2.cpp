@@ -8,8 +8,8 @@
 using namespace::std;
 using namespace::chrono;
 
-//unsigned int size_ = 4096;
-unsigned int size_ = 4096;
+unsigned int size_ = 1000;
+//unsigned int size_ = 100;
 
 
 //Вывод матрицы
@@ -45,21 +45,25 @@ int performance(float t, unsigned int c)
 
 //============================================================================================= Начало написания 3 алгоритмов умножения матриц
 
-vector<vector<complex<double>>>firstMethod(vector<vector<complex<double>>> A, vector<vector<complex<double>>> B)//Первый метод||по формуле из линейной алгебры
-{
-	vector< vector <complex <double>> > Arr(size_, vector<complex<double>>(size_));
-	for (unsigned int i = 0; i < size_; i++)
+	vector<vector<complex<double>>>firstMethod(const vector<vector<complex<double>>>& A, const vector<vector<complex<double>>> &B)//Первый метод||по формуле из линейной алгебры
 	{
-		for (unsigned int j = 0; j < size_; j++)
+		vector< vector <complex <double>> > Arr(size_, vector<complex<double>>(size_));
+
+		
+
+		for (unsigned int i = 0; i < size_; i++)
 		{
-			for (unsigned int k = 0; k < size_; k++)
+			for (unsigned int j = 0; j < size_; j++)
 			{
-				Arr[i][j] += A[i][k] * B[k][j];
+				Arr[i][j] = 0;
+				for (unsigned int k = 0; k < size_; k++)
+				{
+					Arr[i][j] += A[i][k] * B[k][j];
+				}
 			}
 		}
+		return Arr;
 	}
-	return Arr;
-}
 
 void secondMethod(vector<vector<complex<double>>> arr1, vector<vector<complex<double>>> arr2)//Второй метод||результат работы функции cblas_zgemm из библиотеки BLAS
 {
@@ -103,25 +107,35 @@ int main()
 	system("cls");
 	cout << "Время создания и заполнения двух массивов: " << searchTime.count() << "с" << endl;
 	cout << "Сложность алгоритма = " << c << endl;
-	cout << "Производительность алгоритма = " << performance(searchTime.count(), c) << " MFlops" << endl;
+	cout << "Производительность алгоритма = " << performance(searchTime.count(), c) << " MFlops" << endl << endl;
 
 
 #if defined(Debug)//Вывод
 	PrintMatrix(Array1);
 	PrintMatrix(Array2);
 #endif // gebug
-	auto startTime1 = high_resolution_clock::now();//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	vector< vector <complex <double>> > Arr1 = firstMethod(Array1, Array2);
-	auto endTime1 = high_resolution_clock::now();//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	//========================================  ПЕРВЫЙ МЕТОД ПРОИЗВЕДЕНИЯ  ===========================================
 
+	cout << "Умножаем матрицы 1 способом: " << endl;
+
+	auto startTime1 = high_resolution_clock::now();//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	vector< vector <complex <double>> > Arr1 = firstMethod(Array1, Array2);
+	
+	auto endTime1 = high_resolution_clock::now();//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	duration<float> Time1 = endTime1 - startTime1;
 
 	unsigned int Complexity1 = algorithmСomplexity(size_);//Сложность 1 алгоритма
+	cout << "Время произведения матриц первым методом: " << Time1.count() << "с" << endl;
+	cout << "Производительность первого алгоритма произведения матриц = " << performance(Time1.count(), Complexity1) << " MFlops" << endl;
 
-	cout << "Время создания и заполнения двух массивов: " << Time1.count() << "с" << endl;
-	cout << "Сложность алгоритма = " << c << endl;
-	cout << "Производительность алгоритма = " << performance(Time1.count(), c) << " MFlops" << endl;
+#if defined(Debug)//Вывод
+	PrintMatrix(Arr1);
+#endif // gebug
+
+	//========================================  ВТОРОЙ МЕТОД ПРОИЗВЕДЕНИЯ  ===========================================
 
 
 }
