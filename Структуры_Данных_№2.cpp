@@ -1,15 +1,17 @@
 ﻿#include <iostream>
 #include <complex>
 #include <time.h>
+#include <vector>
+#include <thread>
 using namespace::std;
-
+using namespace::chrono;
 
 //unsigned int size_ = 4096;
 unsigned int size_ = 5;
 
 
 //Вывод матрицы
-void PrintMatrix(complex<double>** arr)
+void PrintMatrix(vector<vector<complex<double>>> arr)
 {
 	for (unsigned int i = 0; i < size_; i++)
 	{
@@ -28,7 +30,10 @@ double randomNumber(int min, int max)
 }
 //============================================================================================= Начало написания 3 алгоритмов умножения матриц
 
+void firstMethod()
+{
 
+}
 
 
 
@@ -55,14 +60,11 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	srand((unsigned int)time(0));
 
+	auto startTime = high_resolution_clock::now;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Начальное время
+
 	//Выделяем память под двумерные массивы
-	complex<double>** Array1 = new complex<double> * [size_];
-	complex<double>** Array2 = new complex<double> * [size_];
-	for (unsigned int i = 0; i < size_; i++) 
-	{
-		Array1[i] = new complex<double>[size_];
-		Array2[i] = new complex<double>[size_];
-	}
+	vector< vector <complex <double>> > Array1(size_, vector<complex<double>>(size_));
+	vector< vector <complex <double>> > Array2(size_, vector<complex<double>>(size_));
 
 	//Инициализируем массивы комплексными числами
 	for (unsigned int i = 0; i < size_; i++)
@@ -72,16 +74,15 @@ int main()
 			Array1[i][j] = complex<double>(randomNumber(1,1000),randomNumber(1,1000));
 		}
 	}
+	
+	auto endTime = high_resolution_clock::now;//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Конечное время
+	
 
 	//Вывод
 	PrintMatrix(Array1);
+	cout << "Время создания и заполнения двух массивов: " << search_time << endl;
+	firstMethod();
 
-
-
-
-
-	delete[] Array1;
-	delete[] Array2;
 }
 
 
